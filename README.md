@@ -28,7 +28,7 @@ A powerful web application for automating LinkedIn content creation from Reddit 
 ### Backend
 - **Node.js** with Express
 - **SQLite** for local data storage
-- **Snoowrap** for Reddit API integration
+- **Reddit Public JSON API** (no authentication required)
 - **Google Generative AI** (Gemini) for content generation
 - **Notion SDK** for Notion integration
 
@@ -44,9 +44,10 @@ A powerful web application for automating LinkedIn content creation from Reddit 
 
 - **Node.js** >= 18.0.0
 - **npm** or **yarn**
-- **Reddit API credentials** (Client ID & Secret)
-- **Google Gemini API key** (free tier available)
+- **Google Gemini API key** (REQUIRED - free tier available)
 - **Notion API key** and Database ID (optional)
+
+**✅ No Reddit API credentials needed!** Uses Reddit's public JSON API (no authentication required).
 
 ## Installation
 
@@ -87,12 +88,7 @@ Edit `backend/.env` with your API credentials:
 PORT=3001
 NODE_ENV=development
 
-# Reddit API Configuration
-REDDIT_CLIENT_ID=your_reddit_client_id_here
-REDDIT_CLIENT_SECRET=your_reddit_client_secret_here
-REDDIT_USER_AGENT=SubredditContentStudio/1.0.0
-
-# Gemini API Configuration
+# Gemini API Configuration (REQUIRED)
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-1.5-flash
 
@@ -119,17 +115,7 @@ npm run init-db
 
 ## Getting API Credentials
 
-### Reddit API
-
-1. Go to https://www.reddit.com/prefs/apps
-2. Click "Create App" or "Create Another App"
-3. Choose "script" as the app type
-4. Fill in the required fields:
-   - **Name**: Subreddit Content Studio
-   - **Redirect URI**: http://localhost:8080
-5. Copy the **Client ID** (under the app name) and **Secret**
-
-### Google Gemini API
+### Google Gemini API (REQUIRED)
 
 1. Go to https://makersuite.google.com/app/apikey
 2. Click "Create API Key"
@@ -269,9 +255,9 @@ subreddit-content-studio/
 ## Troubleshooting
 
 ### Reddit API Issues
-- **Rate Limiting**: Use `REDDIT_REFRESH_TOKEN` for higher limits
-- **Invalid Credentials**: Double-check client ID and secret
 - **Subreddit Not Found**: Verify subreddit names (case-sensitive)
+- **Rate Limiting**: Public API is limited but should be sufficient for normal use
+- **Connection Issues**: Check internet connection and try again
 
 ### Gemini API Issues
 - **Quota Exceeded**: Free tier has 60 requests/minute limit

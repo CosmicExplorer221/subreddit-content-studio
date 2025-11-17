@@ -1,55 +1,20 @@
-import snoowrap from 'snoowrap';
+import axios from 'axios';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 class RedditService {
   constructor() {
-    this.client = null;
-    this.initializeClient();
-  }
-
-  initializeClient() {
-    const { REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, REDDIT_USER_AGENT, REDDIT_REFRESH_TOKEN } = process.env;
-
-    if (!REDDIT_CLIENT_ID || !REDDIT_CLIENT_SECRET) {
-      console.warn('⚠️  Reddit API credentials not configured');
-      return;
-    }
-
-    try {
-      // Use refresh token if available for authenticated access, otherwise userless
-      if (REDDIT_REFRESH_TOKEN) {
-        this.client = new snoowrap({
-          userAgent: REDDIT_USER_AGENT || 'SubredditContentStudio/1.0.0',
-          clientId: REDDIT_CLIENT_ID,
-          clientSecret: REDDIT_CLIENT_SECRET,
-          refreshToken: REDDIT_REFRESH_TOKEN
-        });
-      } else {
-        // Userless authentication (lower rate limits)
-        this.client = new snoowrap({
-          userAgent: REDDIT_USER_AGENT || 'SubredditContentStudio/1.0.0',
-          clientId: REDDIT_CLIENT_ID,
-          clientSecret: REDDIT_CLIENT_SECRET
-        });
-      }
-
-      console.log('✓ Reddit API client initialized');
-    } catch (error) {
-      console.error('✗ Reddit API initialization failed:', error.message);
-    }
+    this.baseUrl = 'https://www.reddit.com';
+    this.userAgent = process.env.REDDIT_USER_AGENT || 'SubredditContentStudio/1.0.0';
+    console.log('✓ Reddit Public JSON API initialized (no auth required)');
   }
 
   isConfigured() {
-    return this.client !== null;
+    return true; // Always configured since we use public API
   }
 
   async fetchPosts(subreddit, options = {}) {
-    if (!this.isConfigured()) {
-      throw new Error('Reddit API not configured');
-    }
-
     const {
       timeFilter = 'week', // hour, day, week, month, year, all
       limit = 50,
@@ -57,26 +22,27 @@ class RedditService {
     } = options;
 
     try {
-      let posts;
-      const subredditObj = this.client.getSubreddit(subreddit);
+      let url = `${this.baseUrl}/r/${subreddit}/${sortBy}.json`;
+      const params = { limit };
 
-      switch (sortBy) {
-        case 'top':
-          posts = await subredditObj.getTop({ time: timeFilter, limit });
-          break;
-        case 'new':
-          posts = await subredditObj.getNew({ limit });
-          break;
-        case 'rising':
-          posts = await subredditObj.getRising({ limit });
-          break;
-        case 'hot':
-        default:
-          posts = await subredditObj.getHot({ limit });
-          break;
+      // Add time filter for 'top' sorting
+      if (sortBy === 'top') {
+        params.t = timeFilter;
       }
 
-      return posts.map(post => this.formatPost(post));
+      const response = await axios.get(url, {
+        params,
+        headers: {
+          'User-Agent': this.userAgent
+        },
+        timeout: 10000
+      });
+
+      const posts = response.data.data.children
+        .map(child => child.data)
+        .map(post => this.formatPost(post));
+
+      return posts;
     } catch (error) {
       console.error(`Error fetching posts from r/${subreddit}:`, error.message);
       throw error;
@@ -84,10 +50,6 @@ class RedditService {
   }
 
   async fetchMultiplePosts(subreddits, options = {}) {
-    if (!this.isConfigured()) {
-      throw new Error('Reddit API not configured');
-    }
-
     const results = await Promise.allSettled(
       subreddits.map(sub => this.fetchPosts(sub, options))
     );
@@ -116,15 +78,27 @@ class RedditService {
   }
 
   async fetchComments(postId, limit = 15) {
-    if (!this.isConfigured()) {
-      throw new Error('Reddit API not configured');
-    }
-
     try {
-      const submission = await this.client.getSubmission(postId);
-      await submission.expandReplies({ limit: 0, depth: 1 });
+      // We need to get the permalink first, or we can construct it
+      // For now, we'll fetch from a generic endpoint
+      // Format: /r/subreddit/comments/postId.json
 
-      const comments = submission.comments
+      // First, try to get the post to find its subreddit
+      // We'll use a different approach - search by post ID across Reddit
+      const url = `${this.baseUrl}/comments/${postId}.json`;
+
+      const response = await axios.get(url, {
+        headers: {
+          'User-Agent': this.userAgent
+        },
+        timeout: 10000
+      });
+
+      // Reddit returns an array: [post_data, comments_data]
+      const commentsData = response.data[1].data.children;
+
+      const comments = commentsData
+        .map(child => child.data)
         .filter(comment => comment.body && comment.body !== '[deleted]' && comment.body !== '[removed]')
         .sort((a, b) => b.score - a.score)
         .slice(0, limit)
@@ -144,8 +118,8 @@ class RedditService {
     return {
       id: post.id,
       title: post.title,
-      subreddit: post.subreddit.display_name,
-      author: post.author.name,
+      subreddit: post.subreddit,
+      author: post.author,
       url: post.url,
       permalink: `https://reddit.com${post.permalink}`,
       score: post.score,
@@ -153,7 +127,7 @@ class RedditService {
       numComments: post.num_comments,
       createdUtc: post.created_utc,
       postType,
-      thumbnail: post.thumbnail !== 'self' && post.thumbnail !== 'default' ? post.thumbnail : null,
+      thumbnail: post.thumbnail !== 'self' && post.thumbnail !== 'default' && post.thumbnail !== 'nsfw' ? post.thumbnail : null,
       mediaUrl,
       selftext: post.selftext || null,
       isVideo: post.is_video || false,
@@ -164,7 +138,7 @@ class RedditService {
   formatComment(comment) {
     return {
       id: comment.id,
-      author: comment.author.name,
+      author: comment.author,
       body: comment.body,
       score: comment.score,
       createdUtc: comment.created_utc,
@@ -204,14 +178,20 @@ class RedditService {
   }
 
   async testConnection() {
-    if (!this.isConfigured()) {
-      return { success: false, message: 'Reddit API not configured' };
-    }
-
     try {
-      // Try to fetch a single post from r/test
-      await this.client.getSubreddit('test').getHot({ limit: 1 });
-      return { success: true, message: 'Reddit API connection successful' };
+      // Try to fetch a single post from r/test using public API
+      const response = await axios.get(`${this.baseUrl}/r/test/hot.json?limit=1`, {
+        headers: {
+          'User-Agent': this.userAgent
+        },
+        timeout: 5000
+      });
+
+      if (response.data && response.data.data && response.data.data.children) {
+        return { success: true, message: 'Reddit Public API connection successful (no auth required)' };
+      }
+
+      return { success: false, message: 'Unexpected response from Reddit' };
     } catch (error) {
       return { success: false, message: error.message };
     }
