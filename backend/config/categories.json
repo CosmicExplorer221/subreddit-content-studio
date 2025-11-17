@@ -1,0 +1,78 @@
+{
+  "categories": [
+    {
+      "id": "railway-transit",
+      "name": "Railway & Transit",
+      "description": "Railway engineering, ETCS, signaling, and transportation infrastructure",
+      "enabled": true,
+      "subreddits": [
+        "railroading",
+        "trains",
+        "transit",
+        "infrastructure"
+      ],
+      "defaultStyleTemplate": "railway-default",
+      "minUpvotes": 50,
+      "minComments": 5,
+      "color": "#4F46E5"
+    },
+    {
+      "id": "civil-engineering",
+      "name": "Civil Engineering",
+      "description": "Civil engineering, structural, and construction",
+      "enabled": false,
+      "subreddits": [
+        "civilengineering",
+        "structural",
+        "construction"
+      ],
+      "defaultStyleTemplate": "global",
+      "minUpvotes": 50,
+      "minComments": 5,
+      "color": "#059669"
+    },
+    {
+      "id": "mechanical",
+      "name": "Mechanical Engineering",
+      "description": "Mechanical engineering and general engineering topics",
+      "enabled": false,
+      "subreddits": [
+        "mechanical_engineering",
+        "engineering"
+      ],
+      "defaultStyleTemplate": "global",
+      "minUpvotes": 50,
+      "minComments": 5,
+      "color": "#DC2626"
+    },
+    {
+      "id": "electrical",
+      "name": "Electrical Engineering",
+      "description": "Electronics and electrical engineering",
+      "enabled": false,
+      "subreddits": [
+        "electronics",
+        "electricalengineering"
+      ],
+      "defaultStyleTemplate": "global",
+      "minUpvotes": 50,
+      "minComments": 5,
+      "color": "#D97706"
+    },
+    {
+      "id": "software-tech",
+      "name": "Software & Tech",
+      "description": "Programming, DevOps, and machine learning",
+      "enabled": false,
+      "subreddits": [
+        "programming",
+        "devops",
+        "machinelearning"
+      ],
+      "defaultStyleTemplate": "global",
+      "minUpvotes": 100,
+      "minComments": 10,
+      "color": "#7C3AED"
+    }
+  ]
+}

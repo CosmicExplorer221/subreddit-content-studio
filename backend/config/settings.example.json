@@ -1,0 +1,33 @@
+{
+  "reddit": {
+    "clientId": "YOUR_REDDIT_CLIENT_ID",
+    "clientSecret": "YOUR_REDDIT_CLIENT_SECRET",
+    "userAgent": "SubredditContentStudio/1.0.0",
+    "refreshToken": "YOUR_REDDIT_REFRESH_TOKEN (optional)"
+  },
+  "gemini": {
+    "apiKey": "YOUR_GEMINI_API_KEY",
+    "model": "gemini-1.5-flash",
+    "temperature": 0.7,
+    "maxTokens": 1024
+  },
+  "notion": {
+    "apiKey": "YOUR_NOTION_API_KEY",
+    "databaseId": "YOUR_NOTION_DATABASE_ID"
+  },
+  "app": {
+    "port": 3001,
+    "downloadPath": "./downloads",
+    "maxConcurrentDownloads": 3,
+    "commentLimit": 15,
+    "postLimit": 50
+  },
+  "filters": {
+    "excludeKeywords": [
+      "meme",
+      "shitpost",
+      "circlejerk"
+    ],
+    "minUpvoteRatio": 0.75
+  }
+}

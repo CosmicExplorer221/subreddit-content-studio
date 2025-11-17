@@ -1,0 +1,40 @@
+{
+  "templates": [
+    {
+      "id": "railway-default",
+      "name": "Railway & Transportation Default",
+      "description": "Optimized for railway engineering, ETCS, signaling, and transportation content",
+      "guidelines": "Guidelines (use as a flexible recipe, not a rigid template):\n\n- Tone: knowledgeable and confident and neutral voice. Sometimes concise, sometimes reflective.\n\n- Hook: usually start with a short hook (4–10 words) OR a bold opening sentence. Emoji optional in the opening line.\n\n- Length: aim ~130 words but allow range **40–200 words** depending on depth.\n\n- Structure: choose one natural structure per post (randomize between them):\n  1) Hook → 2–4 short bullet/subpoints (use arrows ↳ or short dashes) → 1-line takeaway/CTA.\n  2) Hook → 2–3 short paragraphs (each 1–2 sentences) → 1-line CTA.\n  3) Single short story / vignette (1 paragraph) ending with a takeaway.\n\n- Formatting: prefer short lines and line breaks for readability. Use arrows ↳ occasionally. Use 0–3 emojis per post. Do not use hashtags.\n\n- Content: include concrete examples, numbers, tools, or trade terms when relevant. If using a niche acronym, add a one-line plain English clarifier.\n\n- CTA: do not end with a short invitation (question, \"Thoughts?\", \"DM me\", etc.)\n\n- Avoid repeating exact phrasing across posts; vary hooks, verbs, and CTAs so the voice remains authentic.\n\n- Safety: do not fabricate facts. If unsure about a number or claim, either omit it or state it as approximate.",
+      "categoryIds": ["railway-transit"],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "global",
+      "name": "Global Default",
+      "description": "General engineering content style",
+      "guidelines": "Guidelines for LinkedIn posts:\n\n- Tone: Professional, knowledgeable, and approachable\n- Length: 100-150 words\n- Structure: Hook → Key points → Takeaway\n- Formatting: Use short paragraphs, bullet points where appropriate\n- Include relevant technical details and examples\n- Use minimal emojis (0-2)\n- No hashtags\n- End with a thought-provoking insight, not a question\n- Be factual and accurate; avoid speculation",
+      "categoryIds": [],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "technical-deep-dive",
+      "name": "Technical Deep Dive",
+      "description": "For detailed technical content",
+      "guidelines": "Technical Deep Dive Guidelines:\n\n- Tone: Expert and detailed\n- Length: 150-250 words\n- Structure: Problem → Technical explanation → Solution/Insight\n- Include specific technical terms, standards, or specifications\n- Use numbered lists for processes or steps\n- Provide context for non-experts with brief clarifications\n- Focus on the \"why\" behind technical decisions\n- No emojis\n- End with broader implications or lessons learned",
+      "categoryIds": [],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": "story-narrative",
+      "name": "Story/Narrative Style",
+      "description": "Narrative-driven posts with storytelling",
+      "guidelines": "Story/Narrative Guidelines:\n\n- Tone: Conversational and engaging\n- Length: 120-180 words\n- Structure: Short story or case study format\n- Start with a compelling scenario or observation\n- Include human elements or real-world impact\n- Use vivid but concise descriptions\n- 1-2 emojis to set tone\n- Connect technical details to broader themes\n- End with a reflection or lesson learned",
+      "categoryIds": [],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2025-01-01T00:00:00Z"
+    }
+  ]
+}
